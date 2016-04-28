@@ -1,0 +1,29 @@
+#!/bin/sh
+set -e
+
+function finish {
+  if [ -n "$tmpBoot" -a -d "$tmpBoot" ] ; then
+    rm -Rv "$tmpBoot"
+  fi
+}
+
+trap finish EXIT
+
+version=$1
+
+if sed -e 's/[[:blank:]]*#.*$//' -e '/^[[:blank:]]*$/d' /etc/fstab | grep -q '[[:space:]]/boot[[:space:]]' ; then
+
+  if ! mount | grep -q 'on /boot type' ; then
+    tmpBoot=$( mktemp -d )
+    mv -v /boot/*-"$version" "$tmpBoot"
+    mount /boot
+
+    for file in $( cd "$tmpBoot" && ls ) ; do
+      [ -e "/boot/${file}" ] && mv -v "/boot/${file}" "/boot/${file}.old"
+      mv -v "${tmpBoot}/${file}" "/boot/${file}"
+    done
+
+  fi
+
+fi
+

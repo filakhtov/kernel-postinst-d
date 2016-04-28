@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+version=$1
+
+if [ ! -f /boot/loader/loader.conf ] ; then
+  echo -n > /boot/loader/loader.conf
+fi
+
+sed -i -e '/^[[:space:]]*$/d' -e 's/^[[:space:]]*default[[:space:]]*.*$//g' /boot/loader/loader.conf
+echo "default ${version}" >> /boot/loader/loader.conf
+

@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+version=$1
+
+if [ -f "/boot/initramfs-${version}.img" ] ; then
+  mv -v "/boot/initramfs-${version}.img" "/boot/initramfs-${version}.img.old"
+fi
+
+dracut --kver "$1" --force
+

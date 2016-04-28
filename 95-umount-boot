@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+
+if mount | grep -q 'on /boot type' ; then
+  umount /boot
+fi
+
